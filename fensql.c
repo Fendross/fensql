@@ -1,5 +1,57 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
+#include "input_buffer.h"
+
+/*
+A simple sqlite clone.
+Steps to implement it:
+    - Coding a REPL (read-execute-print loop) --> IN PROGRESS
+*/
+
+InputBuffer* new_input_buffer() {
+    InputBuffer* input_buffer = (InputBuffer*)malloc(sizeof(InputBuffer));
+    input_buffer->buffer = NULL;
+    input_buffer->buffer_length = 0;
+    input_buffer->input_length = 0;
+
+    return input_buffer;
+}
+
+void close_input_buffer(InputBuffer* input_buffer) {
+    free(input_buffer->buffer);
+    free(input_buffer);
+}
+
+void print_prompt() { printf("fensql> "); }
+
+void read_input(InputBuffer* input_buffer) {
+    ssize_t bytes_read = getline(&(input_buffer->buffer), &(input_buffer->buffer_length), stdin);
+
+    if (bytes_read <= 0) {
+        printf("Error reading input.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    input_buffer->input_length = bytes_read - 1;
+    input_buffer->buffer[bytes_read - 1] = 0;
+}
+
+
+// Main fensql program.
 int main(int argc, char* argv[]) {
-    printf("hello fensql\n");
+    InputBuffer* input_buffer = new_input_buffer();
+    while (true) {
+        print_prompt();
+        read_input(input_buffer); // TODO implement this.
+
+        if (strcmp(input_buffer->buffer, ".exit") == 0) {
+            close_input_buffer(input_buffer); // TODO implement this
+            exit(EXIT_SUCCESS);
+        } else {
+            printf("Unrecognized command '%s'.\n", input_buffer->buffer);
+        }
+    }
 }

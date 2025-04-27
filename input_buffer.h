@@ -13,5 +13,9 @@ typedef struct {
 
 
 // Exported API.
+
+// Instantiate the struct.
 InputBuffer* new_input_buffer();
+
+// Free the struct.
 void close_input_buffer(InputBuffer* input_buffer);

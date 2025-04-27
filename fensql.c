@@ -30,7 +30,7 @@ Generic Notes:
 Steps to implement it:
     1. Coding a REPL (read-execute-print loop)   --> DONE
     2. Adding more Keywords (insert, select)     --> DONE
-    3. In-Memory, Append-only, Single-table DB   --> IN PROGRESS
+    3. In-Memory, Append-only, Single-table DB   --> DONE
 */
 
 // Defines.

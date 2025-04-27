@@ -18,6 +18,7 @@ Generic Notes:
 Steps to implement it:
     - Coding a REPL (read-execute-print loop)   --> DONE
     - Adding more Keywords (insert, select)     --> DONE
+    - In-Memory, Append-only, Single-table DB   --> IN PROGRESS
 */
 
 // Meta Command enum and functionalities.

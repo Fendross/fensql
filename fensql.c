@@ -108,7 +108,7 @@ Table* new_table() {
 }
 
 void free_table(Table* table) {
-    for (uint32_t i = 0; i < table->pages[i]; i++) {
+    for (int i = 0; i < table->pages[i]; i++) {
         free(table->pages[i]);
     }
     free(table);
@@ -123,7 +123,7 @@ typedef enum {
 
 MetaCommandResult execute_meta_command(InputBuffer* input_buffer, Table* table) {
     if (strcmp(input_buffer->buffer, ".exit") == 0) {
-        close_input_buffer(input_buffer);
+        free_input_buffer(input_buffer);
         free_table(table);
         exit(EXIT_SUCCESS);
     } else {
@@ -163,8 +163,8 @@ PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement)
             input_buffer->buffer,
             "insert %d %s %s",
             &(statement->row_to_insert.id),
-            &(statement->row_to_insert.username),
-            &(statement->row_to_insert.email)
+            statement->row_to_insert.username,
+            statement->row_to_insert.email
         );
         if (args_assigned < 3) {
             return PREPARE_SYNTAX_ERROR;
@@ -209,7 +209,7 @@ ExecuteResult execute_statement(Statement* statement, Table* table) {
         case (STATEMENT_INSERT):
             return execute_insert(statement, table);
         case (STATEMENT_SELECT):
-            execute_select(statement, table);
+            return execute_select(statement, table);
     }
 }
 
@@ -224,7 +224,7 @@ InputBuffer* new_input_buffer() {
     return input_buffer;
 }
 
-void close_input_buffer(InputBuffer* input_buffer) {
+void free_input_buffer(InputBuffer* input_buffer) {
     free(input_buffer->buffer);
     free(input_buffer);
 }

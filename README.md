@@ -11,9 +11,9 @@ Here's the simplified system architecture of sqlite:
 
 The input to the **frontend** is basically a query written in SQL. We can imagine the frontend as being composed of the following parts:
 
-- tokenizer
-- parser
-- code generator
+- _**tokenizer**_
+- _**parser**_
+- _**code generator**_
 
 The output is **sqlite virtual machine bytecode**, a compiled program that can operate on the database itself.
 The **backend** consists of:

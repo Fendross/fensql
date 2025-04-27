@@ -7,8 +7,13 @@
 
 /*
 A simple sqlite clone.
+
+Generic Notes:
+    - Meta commands are non-SQL statements that, in our case, start with a dot, for example .exit
+
 Steps to implement it:
-    - Coding a REPL (read-execute-print loop) --> IN PROGRESS
+    - Coding a REPL (read-execute-print loop)   --> DONE
+    - Adding more Keywords (insert, select)     --> IN PROGRESS
 */
 
 InputBuffer* new_input_buffer() {
@@ -45,10 +50,10 @@ int main(int argc, char* argv[]) {
     InputBuffer* input_buffer = new_input_buffer();
     while (true) {
         print_prompt();
-        read_input(input_buffer); // TODO implement this.
+        read_input(input_buffer);
 
         if (strcmp(input_buffer->buffer, ".exit") == 0) {
-            close_input_buffer(input_buffer); // TODO implement this
+            close_input_buffer(input_buffer);
             exit(EXIT_SUCCESS);
         } else {
             printf("Unrecognized command '%s'.\n", input_buffer->buffer);

@@ -17,7 +17,7 @@ Generic Notes:
 
 Steps to implement it:
     - Coding a REPL (read-execute-print loop)   --> DONE
-    - Adding more Keywords (insert, select)     --> IN PROGRESS
+    - Adding more Keywords (insert, select)     --> DONE
 */
 
 // Meta Command enum and functionalities.

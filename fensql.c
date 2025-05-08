@@ -42,7 +42,7 @@ Steps to implement it:
     3. In-Memory, Append-only, Single-table DB   --> DONE
     4. First Tests and Bug Fixes                 --> DONE
     5. Data Persistence on Disk                  --> DONE
-    6. Implementing the Cursor abstraction       --> IN PROGRESS
+    6. Implementing the Cursor abstraction       --> DONE
 */
 
 // Defines.

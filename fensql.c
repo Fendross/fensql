@@ -42,6 +42,7 @@ Steps to implement it:
     3. In-Memory, Append-only, Single-table DB   --> DONE
     4. First Tests and Bug Fixes                 --> DONE
     5. Data Persistence on Disk                  --> DONE
+    6. Implementing the Cursor abstraction       --> IN PROGRESS
 */
 
 // Defines.
@@ -51,7 +52,6 @@ Steps to implement it:
 #define TABLE_MAX_PAGES 100
 
 #define size_of_attribute(Struct, Attribute) sizeof(((Struct*)0)->Attribute)
-
 
 // Row, Pager, Table struct, constants and functionalities.
 // The +1 accounts for the ending null char.
@@ -132,16 +132,6 @@ void* get_page(Pager* pager, uint32_t page_num) {
     }
 
     return pager->pages[page_num];
-}
-
-// Figure out where to read/write in memory for a particular row.
-void* row_slot(Table* table, uint32_t row_num) {
-    uint32_t page_num = row_num / ROWS_PER_PAGE;
-    void* page = get_page(table->pager, page_num);
-    uint32_t row_offset = row_num % ROWS_PER_PAGE;
-    uint32_t byte_offset = row_offset * ROW_SIZE;
-
-    return page + byte_offset;
 }
 
 Pager* pager_open(const char* filename) {
@@ -240,6 +230,49 @@ void* db_close(Table* table) {
     free(table);
 
     return NULL;
+}
+
+// Cursor struct and functionalities.
+typedef struct {
+    Table* table;
+    uint32_t row_num;
+    bool end_of_table; // A position one past the last element.
+} Cursor;
+
+Cursor* table_start(Table* table) {
+    Cursor* cursor = malloc(sizeof(Cursor));
+    cursor->table = table;
+    cursor->row_num = 0;
+    cursor->end_of_table = (table->num_rows == 0);
+
+    return cursor;
+}
+
+Cursor* table_end(Table* table) {
+    Cursor* cursor = malloc(sizeof(Cursor));
+    cursor->table = table;
+    cursor->row_num = table->num_rows;
+    cursor->end_of_table = true;
+
+    return cursor;
+}
+
+// Figure out where to read/write in memory for a particular row.
+void* cursor_value(Cursor* cursor) {
+    uint32_t row_num = cursor->row_num;
+    uint32_t page_num = row_num / ROWS_PER_PAGE;
+    void* page = get_page(cursor->table->pager, page_num);
+    uint32_t row_offset = row_num % ROWS_PER_PAGE;
+    uint32_t byte_offset = row_offset * ROW_SIZE;
+
+    return page + byte_offset;
+}
+
+void cursor_advance(Cursor* cursor) {
+    cursor->row_num += 1;
+    if (cursor->row_num >= cursor->table->num_rows) {
+        cursor->end_of_table = true;
+    }
 }
 
 
